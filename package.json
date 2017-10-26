@@ -1,0 +1,26 @@
+{
+  "name": "terra",
+  "version": "0.0.1",
+  "description": "Terra control (Humidity/Temp)",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Moki38/terra.git"
+  },
+  "keywords": [
+    "Raspberry PI",
+    "Node.js",
+    "Humidity/Temp"
+  ],
+  "dependencies": {
+    "i2c-sensor-am2315": "~1.0.4"
+  },
+  "author": {
+    "name": "Eric van Dijken <eric@team-moki.nl>"
+  },
+  "scripts": {
+    "start": "node test.js"
+  },
+  "license": "MIT"
+}
+
