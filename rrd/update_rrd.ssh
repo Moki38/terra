@@ -1,0 +1,9 @@
+#!/bin/bash
+RRDDIR="/root/terra/rrd/"
+OUTDIR="/root/terra/public/rrd"
+RRDTOOL=/usr/bin/rrdtool
+
+VALUE=$2
+
+$RRDTOOL update $RRDDIR/$1.rrd N:$2
+

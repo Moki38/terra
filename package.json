@@ -1,6 +1,6 @@
 {
   "name": "terra",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Terra control (Humidity/Temp)",
   "main": "index.js",
   "repository": {
@@ -13,6 +13,9 @@
     "Humidity/Temp"
   ],
   "dependencies": {
+    "express": "> 4.6.1",
+    "socket.io": "> 1.0.6",
+    "shelljs": "> 0.3.0",
     "i2c-sensor-am2315": "~1.0.4"
   },
   "author": {
