@@ -41,15 +41,16 @@ io.on('disconnect', function () {
 });
 
 
-function update_terradata() {
+var update_terradata = function(terradata) {
 // read the sensor
-    sensor.read(err, data);
+sensor.read(function(err, data) {
 	if (err) {
 		console.error(err);
 	} else {
                 terradata.humidity = data.humidity;
-                terradata.temperature = sensor.convertKelvinToCelsius(data);
+                terradata.temperature = sensor.convertKelvinToCelsius(data).temperature;
 	}
+})
 };
 
 var update_rrd = function(terradata) {
@@ -70,7 +71,7 @@ var rrdinterval = setInterval(function () {
 //
 var interval = setInterval(function () {
     update_rrd(terradata);
-//    update_terradata();
+    update_terradata(terradata);
     io.emit("terradata", terradata);
 }, 1000);
 
