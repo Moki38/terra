@@ -6,6 +6,14 @@ var app = express();
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
 var shell = require("shelljs");
+var rrd = require('rrd');
+RRD = require('rrd').RRD
+
+var hum_file = '/root/terra/rrd/humidity.rrd';
+var temp_file = '/root/terra/rrd/temperature.rrd';
+
+hum_rrd = new RRD('/root/terra/rrd/humidity.rrd')
+temp_rrd = new RRD('/root/terra/rrd/temperature.rrd')
 
 //
 // Setup terradata struct, for storing terradata
@@ -43,37 +51,44 @@ io.on('disconnect', function () {
 
 var update_terradata = function(terradata) {
 // read the sensor
-sensor.read(function(err, data) {
+     sensor.read(function(err, data) {
 	if (err) {
 		console.error(err);
 	} else {
                 terradata.humidity = data.humidity;
                 terradata.temperature = sensor.convertKelvinToCelsius(data).temperature;
+            hum_rrd.update (new Date, [terradata.humidity], function(err) {
+                if (err) console.log("Error:", err);
+            });
+            temp_rrd.update (new Date, [terradata.temperature], function(err) {
+                if (err) console.log("Error:", err);
+            });
 	}
-})
+
+     })
 };
 
 var update_rrd = function(terradata) {
     var command;
     var child;
-    command = '/root/terra/rrd/update.sh humidity '+terradata.humidity;
+    command = '/root/terra/rrd/update_rrd.sh humidity '+terradata.humidity;
     child = shell.exec(command, {async:true, silent:true});
-    command = '/root/terra/rrd/update.sh temperature '+terradata.temperature;
+    command = '/root/terra/rrd/update_rrd.sh temperature '+terradata.temperature;
     child = shell.exec(command, {async:true, silent:true});
 }
 
 var rrdinterval = setInterval(function () {
-    var rrdchild = shell.exec('/data/moki/rrd/create_graph.sh', {async:true, silent:true});
+    var rrdchild = shell.exec('/root/terra/rrd/graph_rrd.sh', {async:true, silent:true});
   }, 60000);
 
 //
 // Send rovdata to HTML5 client, every 1s
 //
 var interval = setInterval(function () {
-    update_rrd(terradata);
+//    update_rrd(terradata);
     update_terradata(terradata);
     io.emit("terradata", terradata);
-}, 1000);
+}, 5000);
 
 server.listen(80, function () {
     var host = server.address().address

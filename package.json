@@ -16,6 +16,7 @@
     "express": "> 4.6.1",
     "socket.io": "> 1.0.6",
     "shelljs": "> 0.3.0",
+    "rrd": ">= 1.0.1",
     "i2c-sensor-am2315": "~1.0.4"
   },
   "author": {
